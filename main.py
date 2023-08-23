@@ -244,6 +244,7 @@ if selected == "User Specific":
 
     if st.session_state.authenticated:
         st.success("Authentication successful! You can now access the chat.")
+        # st.session_state.authenticated = transaction_fetcher.getAppointments(name)
         show_chat(customer_id, name, st.session_state.authenticated)
 
 
@@ -254,7 +255,7 @@ if selected == "User Specific":
     
 if selected == "Inventory": 
     db_params2 = {
-        'dbname': 'Converge-Inventory',
+        'dbname': 'medicines',
         'user': 'postgres',
         'password': 'password',
         'host': 'localhost'

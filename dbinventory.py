@@ -15,15 +15,16 @@ class InventoryFetcher:
         except psycopg2.Error as e:
             print("Error:", e)
     def fetch_stock(self):
-        query2 = "SELECT * FROM inventory;"
-        with self.conn.cursor() as cursor2:
-            cursor2.execute(query2, ())
-            results = cursor2.fetchall()
+        query = "SELECT medicine_name, stock FROM Medicines;"
+        with self.conn.cursor() as cursor:
+            cursor.execute(query)
+            results = cursor.fetchall()
             if results:
-                stock_list = [(item_name, stock_remaining) for item_name, stock_remaining in results]
+                stock_list = [(medicine_name, stock) for medicine_name, stock in results]
                 return stock_list
             else:
                 return []
+
 
     def fetch_stock_by_item(self, item_name):
         query = "SELECT stock_remaining FROM inventory WHERE item_name = %s;"
@@ -56,7 +57,7 @@ class InventoryFetcher:
 
 if __name__ == "__main__":
     db_params = {
-        'dbname': 'Converge-Inventory',
+        'dbname': 'medicines',
         'user': 'postgres',
         'password': 'password',
         'host': 'localhost'
