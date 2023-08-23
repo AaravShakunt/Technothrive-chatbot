@@ -24,6 +24,26 @@ class TransactionFetcher:
             else:
                 return None
     
+    def getAppointments(self, doctor_name):
+        try:
+
+            
+            cursor = self.conn.cursor()
+            
+            query = "SELECT * FROM Appointments"
+            cursor.execute(query, (doctor_name))
+            appointments = cursor.fetchall()
+            
+            # cursor.close()
+            # self.conn.close()
+            
+            if len(appointments) == 0:
+                return None
+            else:
+                return appointments
+            
+        except (Exception, psycopg2.Error) as error:
+            print("Error while connecting to PostgreSQL:", error)
     
     def authenticate_doctor(self, id, doctor_name):
         try:
@@ -34,13 +54,16 @@ class TransactionFetcher:
             query = "SELECT * FROM Appointments WHERE patient_id = %s AND doctor_name = %s"
             cursor.execute(query, (id, doctor_name))
             appointments = cursor.fetchall()
+
             
-            cursor.close()
-            self.conn.close()
+            
             
             if len(appointments) == 0:
                 return None
             else:
+                appointments = self.getAppointments(doctor_name)
+                cursor.close()
+                self.conn.close()
                 return appointments
             
         except (Exception, psycopg2.Error) as error:
